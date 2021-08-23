@@ -84,8 +84,10 @@ Embed the robot screenshot to the receipt PDF file
 Cleanup directories
     ${receipt_folder}=  Does Directory Exist  ${CURDIR}${/}receipts
     ${images_folder}=  Does Directory Exist  ${CURDIR}${/}images
+    ${orders_csv}=  Does File Exist  ${CURDIR}${/}orders.csv
     Run Keyword If  '${receipt_folder}'=='True'     Remove Directory  ${CURDIR}${/}receipts  True
     Run Keyword If  '${images_folder}'=='True'     Remove Directory  ${CURDIR}${/}images  True
+    Run Keyword If  '${orders_csv}'=='True'     Remove File  ${CURDIR}${/}orders.csv  True
 
 *** Keywords ***
 Create a ZIP file of the receipts
