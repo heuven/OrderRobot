@@ -23,8 +23,9 @@ Open the robot order website
 
 *** Keywords ***
 Get orders
-    Download    https://robotsparebinindustries.com/orders.csv    overwrite=True
-    ${orders}=    Read table from CSV    ${CURDIR}${/}orders.csv    
+    [Arguments]    ${csvfilename}
+    Download    https://robotsparebinindustries.com/${csvfilename}    overwrite=True
+    ${orders}=    Read table from CSV    ${CURDIR}${/}${csvfilename}    
     [return]  ${orders}
 
 # +
@@ -95,6 +96,13 @@ Create a ZIP file of the receipts
      Cleanup directories
 
 *** Keywords ***
+Input form dialog
+    Add heading    Provide filename for orders
+    Add text input    filename  label=Filename:
+    ${result}=  Run dialog
+    [return]  ${result.filename}
+
+*** Keywords ***
 Go to order another robot
     Click Button    id:order-another
 
@@ -106,8 +114,9 @@ Order robots from RobotSpareBin Industries Inc
     Create Directory    ${CURDIR}${/}receipts
     Create Directory    ${CURDIR}${/}output
     
+    ${csvfilename}=     Input form dialog
     Open the robot order website
-    ${orders}=    Get orders
+    ${orders}=    Get orders    ${csvfilename}
     FOR    ${row}    IN    @{orders}
         Close the annoying modal
         Fill the form    ${row}
